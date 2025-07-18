@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -11,22 +11,38 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/authThunks';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success('Login successful!');
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!username || !password) {
-      setLocalError('Please enter both username and password.');
+    if (!email || !password) {
+      setLocalError('Please enter both email and password.');
       return;
     }
     setLocalError('');
-    dispatch(login(username, password));
+    dispatch(login(email, password));
   };
 
   const handleInputChange = (setter) => (e) => {
@@ -54,12 +70,14 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Username"
+              label="Email"
               variant="standard"
               fullWidth
-              value={username}
-              onChange={handleInputChange(setUsername)}
+              value={email}
+              onChange={handleInputChange(setEmail)}
               margin="normal"
+              type="email"
+              autoComplete="email"
             />
             <TextField
               label="Password"
@@ -69,6 +87,7 @@ const Login = () => {
               value={password}
               onChange={handleInputChange(setPassword)}
               margin="normal"
+              autoComplete="current-password"
             />
 
             <Box className="text-right mt-2 mb-4">

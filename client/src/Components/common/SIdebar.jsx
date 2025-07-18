@@ -1,33 +1,34 @@
 import React from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleIcon from '@mui/icons-material/People';
-import SchoolIcon from '@mui/icons-material/School';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
-const superAdminSidebarItems = [
-  { label: 'Dashboard', icon: <DashboardIcon /> },
-  { label: 'Staffs', icon: <PeopleIcon /> },
-  { label: 'Students', icon: <SchoolIcon /> },
-  { label: 'Logout', icon: <LogoutIcon /> },
+const defaultSidebarItems = [
+  { label: 'Dashboard', icon: <span>🏠</span>, path: '/dashboard' },
+  { label: 'Staffs', icon: <span>🧑‍💼</span>, path: '/superadmin/staffs' },
+  { label: 'Students', icon: <span>🎓</span>, path: '/superadmin/students' },
+  { label: 'Logout', icon: <span>🚪</span>, path: '/login' },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ sidebarItems }) => {
+  const navigate = useNavigate();
+  const items = sidebarItems || defaultSidebarItems;
   return (
     <aside className="w-64 bg-white shadow-lg h-screen flex flex-col">
-      <div className="p-6 text-2xl font-bold text-blue-600 tracking-wide border-b">Super Admin</div>
+      <div className="p-6 text-2xl font-bold text-blue-600 tracking-wide border-b">Dashboard</div>
       <List className="flex-1">
-        {superAdminSidebarItems.map((item) => (
-          <ListItem button key={item.label} className="hover:bg-blue-50">
-            <ListItemIcon className="text-blue-500">{item.icon}</ListItemIcon>
+        {items.map((item) => (
+          <ListItem
+            button
+            key={item.label}
+            onClick={() => navigate(item.path)}
+            className="hover:bg-blue-50"
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.label} />
           </ListItem>
         ))}
       </List>
       <Divider />
-      {/* Add additional footer or profile info here if needed */}
     </aside>
   );
 };
