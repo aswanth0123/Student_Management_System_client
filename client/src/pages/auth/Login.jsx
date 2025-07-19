@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/authThunks';
+import { staffLogin } from '../../redux/staffAuthSlice';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,13 +22,25 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading: staffLoading, error: staffError, isAuthenticated: staffIsAuthenticated } = useSelector((state) => state.staffAuth);
 
   useEffect(() => {
     if (isAuthenticated) {
+      // Set activity timestamp for fresh login
+      localStorage.setItem('lastActivity', Date.now().toString());
       toast.success('Login successful!');
       navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (staffIsAuthenticated) {
+      // Set activity timestamp for fresh login
+      localStorage.setItem('lastActivity', Date.now().toString());
+      toast.success('Staff login successful!');
+      navigate('/staff/dashboard');
+    }
+  }, [staffIsAuthenticated, navigate]);
 
   useEffect(() => {
     if (error) {
@@ -35,14 +48,32 @@ const Login = () => {
     }
   }, [error]);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (staffError) {
+      toast.error(staffError);
+    }
+  }, [staffError]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setLocalError('Please enter both email and password.');
       return;
     }
     setLocalError('');
-    dispatch(login(email, password));
+    
+    // Try Super Admin login first
+    try {
+      await dispatch(login(email, password)).unwrap();
+    } catch (error) {
+      // If Super Admin login fails, try Staff login
+      try {
+        await dispatch(staffLogin({ email, password })).unwrap();
+      } catch (staffError) {
+        // Both logins failed
+        console.error('Login failed for both roles:', error, staffError);
+      }
+    }
   };
 
   const handleInputChange = (setter) => (e) => {
@@ -127,9 +158,9 @@ const Login = () => {
                   backgroundColor: '#0088cc',
                 },
               }}
-              disabled={loading}
+              disabled={loading || staffLoading}
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading || staffLoading ? 'Logging in...' : 'Login'}
             </Button>
 
             {/* <Box textAlign="center">

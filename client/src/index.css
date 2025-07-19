@@ -1,1 +1,109 @@
 @import "tailwindcss";
+
+/* Custom styles for mobile sidebar */
+.sidebar-mobile {
+  transition: all 0.3s ease;
+}
+
+.sidebar-mobile:hover {
+  width: 200px !important;
+}
+
+/* Tooltip styles for mobile */
+.mobile-tooltip {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+  font-size: 12px !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar-item {
+    min-height: 48px;
+    justify-content: center;
+    padding: 8px;
+  }
+  
+  .sidebar-icon {
+    font-size: 20px;
+  }
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effects for mobile */
+@media (max-width: 768px) {
+  .sidebar-hover:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    transform: scale(1.05);
+  }
+}
+
+/* Custom scrollbar for mobile */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+}
+
+/* Mobile accordion styles */
+@media (max-width: 768px) {
+  .mobile-accordion {
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-accordion:hover {
+    transform: translateY(-2px);
+  }
+  
+  .mobile-accordion-summary {
+    min-height: 64px !important;
+  }
+  
+  .mobile-accordion-details {
+    padding: 16px !important;
+  }
+}
+
+/* Touch-friendly mobile interactions */
+@media (max-width: 768px) {
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .mobile-action-button {
+    padding: 12px !important;
+    margin: 4px !important;
+  }
+}
+
+/* Status dots for mobile */
+@media (max-width: 768px) {
+  .status-dot {
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+  }
+  
+  .status-dot:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+}

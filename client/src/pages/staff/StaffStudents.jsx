@@ -13,7 +13,7 @@ import {
 } from '../../redux/studentSlice';
 import { toast } from 'react-toastify';
 
-const Students = () => {
+const StaffStudents = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -29,7 +29,7 @@ const Students = () => {
     updateLoading, 
     deleteLoading 
   } = useSelector((state) => state.student);
-  const { user } = useSelector((state) => state.auth);
+  const { user, permissions } = useSelector((state) => state.staffAuth);
 
   useEffect(() => {
     dispatch(fetchStudents());
@@ -96,18 +96,20 @@ const Students = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5" component="h1" gutterBottom sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>
+        <Typography variant="h4" component="h1" gutterBottom>
           Student Management
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={handleAddStudent}
-          disabled={createLoading}
-          sx={{ backgroundColor: '#1976d2' }}
-        >
-          {createLoading ? <CircularProgress size={20} color="inherit" /> : 'Add Student'}
-        </Button>
+        {permissions?.students?.canCreate && (
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={handleAddStudent}
+            disabled={createLoading}
+            sx={{ backgroundColor: '#1976d2' }}
+          >
+            {createLoading ? <CircularProgress size={20} color="inherit" /> : 'Add Student'}
+          </Button>
+        )}
       </Box>
 
       {loading ? (
@@ -121,6 +123,7 @@ const Students = () => {
           onDelete={handleDeleteStudent}
           onView={handleViewStudent}
           userRole={user?.role}
+          permissions={permissions}
         />
       )}
 
@@ -136,4 +139,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default StaffStudents; 
